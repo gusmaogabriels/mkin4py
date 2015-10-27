@@ -41,12 +41,12 @@ A general package for linearly defining and solvig microkinetic catalytic system
 **Features**
 ================
 
-    - **Linearization**
+  - **Linearization**
 
-    The project makes use of explicit routines for the calculation of the MK model derivatives
-        
-        - *Jacobian*: Available as standard.
-        - *Hessian*: Used in the convex two-step method (details in the aforementioned reference)
+  The project makes use of explicit routines for the calculation of the MK model derivatives
+      
+      - *Jacobian*: Available as standard.
+      - *Hessian*: Used in the convex two-step method (details in the aforementioned reference)
 
 ================
 **On the way**
