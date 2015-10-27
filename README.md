@@ -65,7 +65,7 @@ A general package for linearly defining and solvig microkinetic catalytic system
 
   - **Example**: Stoltze's 17-Step Ethylene Epoxidation MK system
 
-        import mk4py
+        import mkin4py
         import numpy as np
         
         # Environment Conditions
@@ -74,9 +74,9 @@ A general package for linearly defining and solvig microkinetic catalytic system
         gas_constant = 8.31456e-3 # Gas Constant - kJ/(mol×K)
         
         # Set the environment conditions
-        mk4py.environment.set_temperature(T)
-        mk4py.environment.set_gas_constant(gas_constant)
-        mk4py.environment. set_pressure(P)
+        mkin4py.environment.set_temperature(T)
+        mkin4py.environment.set_gas_constant(gas_constant)
+        mkin4py.environment. set_pressure(P)
         
         # Stoichsiometric Matrix
         ms = [
@@ -105,14 +105,14 @@ A general package for linearly defining and solvig microkinetic catalytic system
         nreac = [0, 1] # Reactant Rows in mS
         nprod = [2, 3, 4, 5] # Product Rows in mS
         stoichs = np.concatenate((nreac,nprod)) # Reactants and Products are not under PSSA
-        mk4py.mkmodel.create(np.shape(ms)[0],np.shape(ms)[1],stoichs) # Initialize the model
+        mkin4py.mkmodel.create(np.shape(ms)[0],np.shape(ms)[1],stoichs) # Initialize the model
         
         # Species labels 
         splabels = ['O2','C2H4','C2H4O','CH3CHO','CO2','H2O','*','O2*','O*','OH*',\
         'H2O*','CO2*','C2H4*','O∙O*','C2H4∙O*','CH2CH2O∙O*','C2H4O∙O*','CH3CHO∙O*',\
         'CH2CHOH∙O*','CH2CHO∙O*']
         
-        mk4py.mkmodel.set_splabels(splabels) # Set species labels
+        mkin4py.mkmodel.set_splabels(splabels) # Set species labels
         
         # Pre-exponential Factors of Eelementary Reactions (1/s)
         va =[2.71e5, 1.1e12, 4.0e12, 8.0e14, 2.0e7, 1.3e15, 7.2e7,\
@@ -128,14 +128,14 @@ A general package for linearly defining and solvig microkinetic catalytic system
         65.6000, 50.0000, 38.9000, 0, 46.6000, 0]
         
         # Set the kinetic parameters
-        mk4py.mkmodel.set_kinetic_params(np.array(va,ndmin=2).T,np.array(vea,ndmin=2).T)
+        mkin4py.mkmodel.set_kinetic_params(np.array(va,ndmin=2).T,np.array(vea,ndmin=2).T)
         
         y = [0.5, 0.5, 0, 0, 0, 0] # Reactants and Products Initial Fraction
-        mk4py.mkmodel.set_concentrations(y) # Set the *free*-species concentrations
+        mkin4py.mkmodel.set_concentrations(y) # Set the *free*-species concentrations
         
   - **Evaluation**:
        
-        sol = mk4py.solver.solver.rk4() # 4th-order Runge-Kutta method coupled within the LP solved via QMR
+        sol = mkin4py.solver.solver.rk4() # 4th-order Runge-Kutta method coupled within the LP solved via QMR
         # Outupts
         print '...'
         print sol['msg'], 'time: ', sol['time']
