@@ -9,7 +9,7 @@ A general package for linearly defining and solvig microkinetic catalytic system
 **Description**
 ================
 
-  A microkinetic package tranlated from Linearized Microkinetic Catalytic System Solver
+  A microkinetic package translated from Linearized Microkinetic Catalytic System Solver
 
   By the author:
 
