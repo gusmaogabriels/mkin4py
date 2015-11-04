@@ -5,9 +5,9 @@
 
 A general package for linearly defining and solvig microkinetic catalytic systems.
 
-================
+----------------
 **Description**
-================
+----------------
 
   A microkinetic package translated from Linearized Microkinetic Catalytic System Solver
 
@@ -37,9 +37,9 @@ A general package for linearly defining and solvig microkinetic catalytic system
 
   The convergence parameters are set as default in the module `solver` in `.params`
 
-================
+----------------
 **Features**
-================
+----------------
 
    **Linearization**
 
@@ -48,16 +48,16 @@ A general package for linearly defining and solvig microkinetic catalytic system
     - *Jacobian*: Available as standard.
     - *Hessian*: Used in the convex two-step method (details in the aforementioned reference)
 
-================
+----------------
 **On the way**
-================
+----------------
 
   1. Additional LP solvers in "switchable" fashion.
   2. Evolutionary methods for the definition of best convergence parameters for *stiff* problems (when TOF`s are close to the machine precision)
 
-================
+----------------
 **Instructions**
-================
+----------------
 
   - **Installation**
 
