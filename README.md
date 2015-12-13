@@ -3,7 +3,7 @@
 ============
 *mkin(microkinetics) 4 py(thon)*
 
-A general package for linearly defining and solvig microkinetic catalytic systems.
+A general package for linearly defining and solving microkinetic catalytic systems.
 
 ----------------
 **Description**
