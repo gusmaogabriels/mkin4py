@@ -106,6 +106,7 @@ A general package for linearly defining and solving microkinetic catalytic syste
         nprod = [2, 3, 4, 5] # Product Rows in mS
         stoichs = np.concatenate((nreac,nprod)) # Reactants and Products are not under PSSA
         mkin4py.mkmodel.create(np.shape(ms)[0],np.shape(ms)[1],stoichs) # Initialize the model
+        mkin4py.mkmodel.set_ms(ms) # Set the stoichiometry matrix
         
         # Species labels 
         splabels = ['O2','C2H4','C2H4O','CH3CHO','CO2','H2O','*','O2*','O*','OH*',\
