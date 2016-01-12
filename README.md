@@ -3,6 +3,12 @@
 ============
 *mkin(microkinetics) 4 py(thon)*
 
+Copyright © 2015 - Gabriel Sabença Gusmão
+
+[![license](https://img.shields.io/pypi/l/mkin4py.svg)](./LICENSE)
+[![pypi version](https://img.shields.io/pypi/v/mkin4py.svg)](https://pypi.python.org/pypi/mkin4py)
+[![pypi downloads](https://img.shields.io/pypi/dm/mkin4py.svg)](https://pypi.python.org/pypi/mkin4py)
+
 A general package for linearly defining and solving microkinetic catalytic systems.
 
 ----------------
