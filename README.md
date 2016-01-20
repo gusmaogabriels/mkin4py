@@ -1,5 +1,5 @@
 ==================================================================
-**mkin4py** <img src="http://i.imgur.com/ezsLFa2.png" width="48">
+<img src="http://i.imgur.com/ezsLFa2.png" width="48"> **mkin4py** 
 ==================================================================
 *mkin(microkinetics) 4 py(thon)*
 
