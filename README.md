@@ -1,6 +1,6 @@
-============
-**mkin4py** 
-============
+==================================================
+**mkin4py** ![alt tag](http://imgur.com/ezsLFa2)
+==================================================
 *mkin(microkinetics) 4 py(thon)*
 
 Copyright © 2015 - Gabriel Sabença Gusmão
