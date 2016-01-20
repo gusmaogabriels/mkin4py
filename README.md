@@ -1,5 +1,5 @@
 ===============================================================
-**mkin4py** ![alt tag](http://i.imgur.com/ezsLFa2.png=10x10)
+**mkin4py** ![alt tag](http://i.imgur.com/ezsLFa2.png = 10x)
 ===============================================================
 *mkin(microkinetics) 4 py(thon)*
 
