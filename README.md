@@ -20,7 +20,7 @@ A general package for linearly defining and solving microkinetic catalytic syste
   By the author:
 
   *Gabriel S. Gusmão* <gusmaogabriels@gmail.com>
-  under *Dr. Phillip Christopher* <christopher@engr.ucredu> advisement.
+  under *Dr. Phillip Christopher* <christopher@engr.ucr.edu> advisement.
 
   For detailed information, refer to code comments or associated publication.
   Gusmão, G. S. & Christopher, P., *A general and robust approach for defining and solving 
