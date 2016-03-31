@@ -18,7 +18,7 @@ def newton_type(param):
     #jacobian += __np.random.normal(0,convergence_params['criteriaqmr'],jacobian.shape)
     # solution algorithm
     dcoverage = __np.array(__linalg.qmr(jacobian.T,-f*convergence_params['hfun'],\
-    tol = convergence_params['inner_criteria'],maxiter=convergence_params['inner_convtol']))[0]
+    tol = convergence_params['inner_criteria'],maxiter=convergence_params['inner_convtol'])[0])
     if param == 2 and max(abs(dcoverage))<1:
         count = 0
         fhessp = lambda dconv,M : __np.dot(M.T,dconv)
