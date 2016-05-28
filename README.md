@@ -9,7 +9,6 @@ Copyright © 2015 - Gabriel Sabença Gusmão
 
 [![researchgate](https://www.researchgate.net/images/public/profile_share_badge.png)](https://www.researchgate.net/profile/Gabriel_Gusmao?cp=shp)
 
-[![Build Status](https://secure.travis-ci.org/gusmaogabriels/mkin4py.svg?branch=master)](http://travis-ci.org/gusmaogabriels/mkin4py)
 [![license](https://img.shields.io/pypi/l/mkin4py.svg)](./LICENSE.md)
 [![pypi version](https://img.shields.io/pypi/v/mkin4py.svg)](https://pypi.python.org/pypi/mkin4py)
 
