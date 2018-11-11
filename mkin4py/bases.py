@@ -133,7 +133,7 @@ class MKmodel(object):
         elif not (isinstance(x,(tuple,list,np.ndarray)) and all([isinstance(i,(int,long,float)) for i in x])):
             raise TypeError('concs must be a list, tuple or numpy.ndarray of numeric values')
         else:
-            self.concs = x
+            self.concs = np.array(x)
             self.__param_status__['concentrations'] = True
             self.__validator()
 
