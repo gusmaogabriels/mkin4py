@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 from __future__ import division, absolute_import, print_function
 
-from . import derivatives as __derivatives, coverage_fix as __cfix, linsolver as __linsolver, np as __np, dc as __dc, time as __time
+from . import derivatives as __derivatives, coverage as __cfix, linsolver as __linsolver, np as __np, dc as __dc, time as __time
 from .params import convergence_params
 from ..bases import mkmodel as __mk
 
