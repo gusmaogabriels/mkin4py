@@ -78,7 +78,7 @@ A general package for linearly defining and solving microkinetic catalytic syste
         
         # Environment Conditions
         T = 500; #K
-        P = 2; #bar
+        P = 1; #bar
         gas_constant = 8.31456e-3 # Gas Constant - kJ/(mol×K)
         
         # Set the environment conditions
