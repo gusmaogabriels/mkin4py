@@ -69,7 +69,7 @@ A general package for linearly defining and solving microkinetic catalytic syste
 
   - **Installation**
 
-        pip install mk4py==version_no
+        pip install --upgrade https://github.com/gusmaogabriels/mkin4py/zipball/master
 
   - **Example**: Stoltze's 17-Step Ethylene Epoxidation MK system
 
