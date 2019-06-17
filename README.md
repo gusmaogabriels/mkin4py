@@ -146,12 +146,12 @@ A general package for linearly defining and solving microkinetic catalytic syste
        
         sol = mkin4py.solver.solve.rk4() # 4th-order Runge-Kutta method coupled within the LP solved via QMR
         # Outupts
-        print '...'
-        print sol['msg'], 'time: ', sol['time']
-        print 'Coverage'
-        print sol['coverage']
-        print 'Rates'
-        print sol['rates']
+        print ('...')
+        print (sol['msg'], 'time: ', sol['time'])
+        print ('Coverage')
+        print (sol['coverage'])
+        print ('Rates')
+        print (sol['rates'])
 
   - **Output**:
 
