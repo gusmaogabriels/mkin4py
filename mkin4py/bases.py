@@ -13,22 +13,22 @@ class Environment(object):
         self.__status__ = False
 
     def set_gas_constant(self,x):
-        if not isinstance(x,(int,long,float)):
-            raise TypeError('Gas constant must be numeric (int,long,float)')
+        if not isinstance(x,(int,float)):
+            raise TypeError('Gas constant must be numeric (int, float)')
         else:
             self.gas_constant = x
             self.__validator()
 
     def set_temperature(self,x):
-        if not isinstance(x,(int,long,float)):
-            raise TypeError('Temperature must be numeric (int,long,float)')
+        if not isinstance(x,(int,float)):
+            raise TypeError('Temperature must be numeric (int, float)')
         else:
             self.temperature = x
             self.__validator()
 
     def set_pressure(self,x):
-        if not isinstance(x,(int,long,float)):
-            raise TypeError('Pressure must be numeric (int,long,float)')
+        if not isinstance(x,(int,float)):
+            raise TypeError('Pressure must be numeric (int, float)')
         else:
             self.pressure = x
             self.__validator()
@@ -74,7 +74,7 @@ class MKmodel(object):
             raise TypeError('Numnber of species (num_species) must be integer.')
         elif not isinstance(num_reactions, int):
             raise TypeError('Numnber of reactions (num_reactions) must be integer.')
-        elif not (isinstance(stoichs,(tuple,list,np.ndarray)) and all([isinstance(x,(int)) for x in stoichs])):
+        elif not (isinstance(stoichs,(tuple,list,np.ndarray)) and not all([isinstance(x,(int)) for x in stoichs])):
             raise TypeError('stoichs must be a list, tuple or numpy.ndarray of integer values')
         else:
             pass
@@ -130,7 +130,7 @@ class MKmodel(object):
     def set_concentrations(self,x):
         if not self.__mkinit_status__:
             raise Exception('MK model has not been initialized')
-        elif not (isinstance(x,(tuple,list,np.ndarray)) and all([isinstance(i,(int,long,float)) for i in x])):
+        elif not (isinstance(x,(tuple,list,np.ndarray)) and all([isinstance(i,(int,float)) for i in x])):
             raise TypeError('concs must be a list, tuple or numpy.ndarray of numeric values')
         else:
             self.concs = np.array(x)
