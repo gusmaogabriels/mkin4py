@@ -86,7 +86,7 @@ A general package for linearly defining and solving microkinetic catalytic syste
         mkin4py.environment.set_gas_constant(gas_constant)
         mkin4py.environment. set_pressure(P)
         
-        # Stoichsiometric Matrix
+        # Stoichiometric Matrix
         ms = [
         [-1, 1, 0, 0,-1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],\
         [ 0, 0, 0, 0, 0, 0,-1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,-1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],\
