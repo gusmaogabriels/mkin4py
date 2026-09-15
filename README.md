@@ -1,5 +1,11 @@
 **mkin4py** 
 ==================================================================
+
+[![GitHub download snapshot](https://raw.githubusercontent.com/gusmaogabriels/optinpy/distribution-statistics/packages/badges/mkin4py-github.svg)](https://www.gabrielgusmao.com/tools/analytics_dashboard.html#packageDownloads)
+[![Reported PyPI downloads](https://raw.githubusercontent.com/gusmaogabriels/optinpy/distribution-statistics/packages/badges/mkin4py-pypi.svg)](https://www.gabrielgusmao.com/tools/analytics_dashboard.html#packageDownloads)
+
+[Download counts, dates, and coverage](https://www.gabrielgusmao.com/tools/analytics_dashboard.html#packageDownloads).
+
 *mkin(microkinetics) 4 py(thon)*
 
 Copyright © 2015 - Gabriel Sabença Gusmão
