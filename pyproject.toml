@@ -1,0 +1,30 @@
+[build-system]
+requires = ["setuptools>=77"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "mkin4py"
+version = "2.0.0a1"
+description = "Microkinetic catalytic systems with JAX"
+readme = "README.md"
+requires-python = ">=3.11"
+license = "MIT AND BSD-3-Clause"
+license-files = ["LICENSE.md", "NOTICE.md"]
+authors = [{name = "Gabriel S. Gusmao", email = "gusmaogabriels@gmail.com"}]
+dependencies = ["jax>=0.4.38"]
+
+[project.scripts]
+mkin4py = "mkin4py.cli:main"
+
+[project.optional-dependencies]
+dev = ["pytest>=8", "scipy>=1.12", "build>=1.2", "twine>=6"]
+
+[project.urls]
+Homepage = "https://github.com/gusmaogabriels/mkin4py"
+Issues = "https://github.com/gusmaogabriels/mkin4py/issues"
+
+[tool.setuptools.packages.find]
+include = ["mkin4py*"]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
