@@ -71,6 +71,7 @@ python -m benchmarks.timing --repeats 20
 ```
 
 The benchmark reports lowering, compilation, first execution and repeated warm
-execution separately. Every call uses the same initial coverage and synchronizes
-JAX results. `rk4()['time']` includes any compilation and synchronization incurred
+execution separately, alongside the Python API and a fresh CLI process. Every
+call uses the same initial coverage and synchronizes JAX results. The CLI process
+timing includes imports, model setup, compilation, and the solve. `rk4()['time']` includes any compilation and synchronization incurred
 by that call. Timings are informational in CI; numerical accuracy is required.
