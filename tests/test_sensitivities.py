@@ -119,3 +119,28 @@ def test_singular_equilibrium_has_invalid_sensitivity():
     f = lambda k: adsorption(jnp.array([k, 0., 1.]))[2]
     assert jnp.isfinite(f(0.))
     assert not jnp.isfinite(jax.grad(f)(0.))
+
+
+@pytest.mark.parametrize('scale', [1e-20, 1e-12, 1., 1e12, 1e20])
+def test_rate_timescale_does_not_change_equilibrium_or_sensitivity(scale):
+    f = lambda pressure: adsorption(jnp.array([2.*scale, 3.*scale, pressure]))[2]
+    p = .7
+    expected = 2*p/(3+2*p)
+    derivative = 6/(3+2*p)**2
+    np.testing.assert_allclose(jax.jit(f)(p), expected, atol=2e-12)
+    np.testing.assert_allclose(jax.jit(jax.grad(f))(p), derivative, atol=2e-11)
+    step = 1e-4
+    np.testing.assert_allclose((f(p+step)-f(p-step))/(2*step), derivative, rtol=2e-8)
+
+
+@pytest.mark.parametrize('option,value', [('criteria', jnp.inf), ('criteria', 0.),
+    ('inner_criteria', -1.), ('h', jnp.nan), ('h', 1.1), ('hfun', 0.),
+    ('delta_min', 2.), ('convtol', 0), ('convtolH', -1), ('inner_convtol', 0)])
+def test_invalid_dynamic_controls_are_not_reported_as_roots(option, value):
+    def f(k):
+        return steady_state(jnp.array([.7, .6, .4]),
+            jnp.array([[-1, 1], [-1, 1], [1, -1]]), k,
+            jnp.array([1, 2]), jnp.array([2]), jnp.array(1), **{option: value})[2]
+    k = jnp.array([2., 3.])
+    assert jnp.isnan(jax.jit(f)(k))
+    assert jnp.all(jnp.isnan(jax.jit(jax.grad(f))(k)))

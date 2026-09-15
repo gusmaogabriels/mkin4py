@@ -59,6 +59,9 @@ def steady_state(cov, ms, k, surface, xsurface, ndof, *, h=1., hfun=.995,
     hold the stoichiometry and index maps fixed. The reduced surface Jacobian
     must be nonsingular. Failed convergence returns NaN values and derivatives.
     No Python model mutation, random restart or wall-time cutoff occurs here.
+    ``criteria`` bounds row-normalized surface residuals, so slowing all rates
+    cannot make an unconverged initial guess appear converged. Invalid dynamic
+    control values return NaN; budgets must be scalar integers.
     """
     if param not in (1, 2) or method not in ('qmr', 'dense'):
         raise ValueError("param must be 1 or 2 and method must be qmr or dense")
@@ -71,7 +74,22 @@ def steady_state(cov, ms, k, surface, xsurface, ndof, *, h=1., hfun=.995,
         raise ValueError("Provide a species vector, reaction vector and matching model index maps")
     if not all(np.issubdtype(x.dtype, np.integer) for x in (ms, surface, xsurface, ndof)):
         raise TypeError("Stoichiometry and model index maps must have integer dtype")
-    msa = ms * k[None, :]
+    controls = [np.asarray(value) for value in (h, hfun, delta_min, criteria, inner_criteria)]
+    budgets = [np.asarray(value) for value in (convtol, convtolH, inner_convtol)]
+    if any(value.ndim != 0 for value in controls + budgets):
+        raise ValueError('Solver controls must be scalars')
+    if any(not (np.issubdtype(value.dtype, np.floating) or np.issubdtype(value.dtype, np.integer))
+           for value in controls):
+        raise TypeError('Solver controls must be real numbers')
+    if any(not np.issubdtype(value.dtype, np.integer) for value in budgets):
+        raise TypeError('Iteration budgets must be integers')
+    controls = np.stack(controls)
+    controls_valid = (np.all(np.isfinite(controls) & (controls > 0))
+                      & (h <= 1) & (hfun <= 1) & (delta_min <= 1)
+                      & np.all(np.stack(budgets) > 0))
+    coefficients = ms * k[None, :]
+    row_scale = np.maximum(np.max(np.abs(coefficients), axis=1), np.finfo(cov.dtype).tiny)
+    msa = coefficients / row_scale[:, None]
 
     def expand(x):
         return cov.at[xsurface].set(x).at[ndof].set(1. - np.sum(x))
@@ -103,7 +121,7 @@ def steady_state(cov, ms, k, surface, xsurface, ndof, *, h=1., hfun=.995,
     indices_valid = (np.all((surface >= 0) & (surface < cov.size))
                      & np.all(ordered[1:] > ordered[:-1])
                      & np.all(ordered == np.sort(np.concatenate((xsurface, ndof[None])))))
-    valid = (indices_valid & np.all(np.isfinite(solution)) & np.all(np.isfinite(k))
+    valid = (controls_valid & indices_valid & np.all(np.isfinite(solution)) & np.all(np.isfinite(k))
              & np.all(k >= 0) & np.all(solution >= 0) & (error <= criteria))
     # Multiplication by NaN also marks gradients of an unconverged solve as
     # invalid; a constant NaN branch would misleadingly differentiate to zero.

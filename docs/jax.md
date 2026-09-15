@@ -101,7 +101,11 @@ to differentiate temperature, activation energies or pre-exponential factors.
 The callable can be composed into a local Optinpy objective.
 
 Sensitivities require an isolated converged root with a nonsingular reduced
-Jacobian. They describe the selected steady-state branch; they do not differentiate
+Jacobian. This interface normalizes each residual row by its largest kinetic
+coefficient before applying `criteria`; uniformly slow rates cannot make an
+incorrect initial coverage pass the root check. The original `rk4` retains its
+absolute physical-rate criterion. Invalid dynamic solver controls return NaN.
+Sensitivities describe the selected steady-state branch; they do not differentiate
 restart decisions or jumps between multiple steady states. Unconverged outputs and
 their sensitivities are NaN; a singular root can have finite coverage but invalid
 sensitivities. Check finiteness before using a result. The pure function has no
