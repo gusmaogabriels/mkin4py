@@ -67,6 +67,8 @@ A general package for linearly defining and solving microkinetic catalytic syste
 **Instructions**
 ----------------
 
+  See [JAX execution, local CLI, and compatibility details](docs/jax.md).
+
   - **Installation**
 
         pip install --upgrade https://github.com/gusmaogabriels/mkin4py/zipball/master

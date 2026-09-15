@@ -2,7 +2,7 @@
 from __future__ import division, absolute_import, print_function
 
 __author__ = {'Gabriel S. Gusmao' : 'gusmaogabriels@gmail.com'}
-__version__ = '1.0'
+__version__ = '2.0.0a1'
 
 """
 
@@ -30,14 +30,14 @@ __version__ = '1.0'
 
 """
 
-import numpy as np
-from scipy.sparse import linalg
+import jax.numpy as np
+from jax.numpy import linalg
 from time import time
 from copy import copy as dc
 __status__ = False
 
-from . import solver
 from . import bases
+from . import solver
 environment = bases.environment
 mkmodel = bases.mkmodel
 

@@ -1,25 +1,24 @@
-# -*- coding: utf-8 -*-
-
-from __future__ import division, absolute_import, print_function
-from . import dc as __dc
+"""Functional surface-site updates used by the original Newton/RK4 method."""
+import jax
+import jax.numpy as np
 from .params import convergence_params
-from ..bases import mkmodel as __mk
+from ..bases import mkmodel
 
-def coverage_update(delta,h=1,cov=[]):
-    """ coverage_update
-    params(2) :
-        delta coverage -> numeric of size of xsurface
-        h = stepsize -> numeric value
-        coverage -> reference to __mk.coverage or equivalent __mk.coverage
-    return a adjusted version of the __mk.coverage
-    """
-    if cov == []:
-        __mk.coverage = __dc(__mk.coverage)
-    else:
-        __mk.coverage = __dc(cov)
-    __mk.coverage[__mk.maps['xsurface']] += h*delta # Iteration update
-    __mk.coverage[__mk.maps['ndof']] -= h*sum(delta) # DOF Site iteration update
-    __mk.coverage[__mk.maps['surface']] = __mk.coverage[__mk.maps['surface']]*(__mk.coverage[__mk.maps['surface']]>0)\
-        + convergence_params['delta_min']*(__mk.coverage[__mk.maps['surface']]<=0)
-    __mk.coverage[__mk.maps['surface']] /= sum(__mk.coverage[__mk.maps['surface']]) # Renormalization
-    return __mk.coverage
+
+@jax.jit
+def update(coverage, delta, h, surface, xsurface, ndof, delta_min):
+    cov = coverage.at[xsurface].add(h * delta)
+    cov = cov.at[ndof].add(-h * np.sum(delta))
+    values = np.maximum(cov[surface], delta_min)
+    return cov.at[surface].set(values / np.sum(values))
+
+
+def coverage_update(delta, h=1, cov=None):
+    """Update the configured model; ``cov`` optionally supplies the starting point."""
+    if cov is None or (isinstance(cov, (tuple, list)) and len(cov) == 0):
+        cov = mkmodel.coverage
+    maps = mkmodel.maps
+    mkmodel.coverage = update(np.asarray(cov), np.asarray(delta), h,
+                             maps['surface'], maps['xsurface'], maps['ndof'],
+                             convergence_params['delta_min'])
+    return mkmodel.coverage
