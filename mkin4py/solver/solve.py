@@ -42,6 +42,74 @@ def attempt(cov, ms, msa, surface, xsurface, ndof, h=1., hfun=.995, delta_min=1e
     return jax.lax.while_loop(cond, body, (0, cov, residual(cov)))
 
 
+@partial(jax.jit, static_argnames=('param', 'method'))
+def steady_state(cov, ms, k, surface, xsurface, ndof, *, h=1., hfun=.995,
+                 delta_min=1e-30, criteria=1e-8, inner_criteria=1e-9,
+                 convtol=100, convtolH=20, inner_convtol=300,
+                 param=1, method='qmr'):
+    """Return steady-state coverage with implicit forward/reverse derivatives.
+
+    Uses the original Newton/RK4 ``attempt`` to find the root. All arrays are
+    explicit: ``cov`` is the initial species vector (gas entries are fixed
+    partial pressures), ``ms`` is species by reactions, ``k`` is the reaction
+    constant vector, and the index arrays are the original model maps.
+
+    Gradients describe a locally isolated steady state, not the iterations or
+    initial surface guess. Differentiate rate constants or fixed gas entries;
+    hold the stoichiometry and index maps fixed. The reduced surface Jacobian
+    must be nonsingular. Failed convergence returns NaN values and derivatives.
+    No Python model mutation, random restart or wall-time cutoff occurs here.
+    """
+    if param not in (1, 2) or method not in ('qmr', 'dense'):
+        raise ValueError("param must be 1 or 2 and method must be qmr or dense")
+    cov, ms, k = np.asarray(cov, dtype=float), np.asarray(ms), np.asarray(k, dtype=float)
+    surface, xsurface, ndof = np.asarray(surface), np.asarray(xsurface), np.asarray(ndof)
+    if (cov.ndim != 1 or ms.ndim != 2 or ms.shape[0] != cov.size
+            or k.shape != (ms.shape[1],) or surface.ndim != 1
+            or surface.size != xsurface.size + 1 or xsurface.ndim != 1
+            or ndof.ndim != 0):
+        raise ValueError("Provide a species vector, reaction vector and matching model index maps")
+    if not all(np.issubdtype(x.dtype, np.integer) for x in (ms, surface, xsurface, ndof)):
+        raise TypeError("Stoichiometry and model index maps must have integer dtype")
+    msa = ms * k[None, :]
+
+    def expand(x):
+        return cov.at[xsurface].set(x).at[ndof].set(1. - np.sum(x))
+
+    def residual(x):
+        return (msa[xsurface] @ power_law(expand(x), ms)).ravel()
+
+    def solve_root(_, initial):
+        _, solution, _ = attempt(expand(initial), ms, msa, surface, xsurface, ndof,
+            h=h, hfun=hfun, delta_min=delta_min, criteria=criteria,
+            inner_criteria=inner_criteria, convtol=convtol, convtolH=convtolH,
+            inner_convtol=inner_convtol, param=param, method=method)
+        return solution[xsurface]
+
+    def tangent_solve(linear, rhs):
+        # Small dense surface systems: materialize the linearized residual,
+        # equilibrate it, and let JAX transpose the solve for reverse mode.
+        matrix = jax.jacfwd(linear)(np.zeros_like(rhs))
+        scale = np.maximum(np.max(np.abs(matrix), axis=1), np.finfo(cov.dtype).tiny)
+        return np.linalg.solve(matrix / scale[:, None], rhs / scale)
+
+    if xsurface.size:
+        root = jax.lax.custom_root(residual, cov[xsurface], solve_root, tangent_solve)
+        solution = expand(root)
+    else:
+        solution = expand(np.empty((0,), dtype=cov.dtype))
+    error = np.max(np.abs((msa @ power_law(solution, ms))[surface]))
+    ordered = np.sort(surface)
+    indices_valid = (np.all((surface >= 0) & (surface < cov.size))
+                     & np.all(ordered[1:] > ordered[:-1])
+                     & np.all(ordered == np.sort(np.concatenate((xsurface, ndof[None])))))
+    valid = (indices_valid & np.all(np.isfinite(solution)) & np.all(np.isfinite(k))
+             & np.all(k >= 0) & np.all(solution >= 0) & (error <= criteria))
+    # Multiplication by NaN also marks gradients of an unconverged solve as
+    # invalid; a constant NaN branch would misleadingly differentiate to zero.
+    return solution * jax.lax.stop_gradient(np.where(valid, 1., np.nan))
+
+
 def rk4(param=1, *, model=None, **options):
     """Solve the configured model, preserving original result keys.
 
