@@ -16,3 +16,12 @@ def test_cli_invalid_input():
         input='{}', capture_output=True, text=True)
     assert result.returncode == 2
     assert not json.loads(result.stderr)['success']
+
+
+def test_cli_iteration_limit_is_not_success():
+    result = subprocess.run([sys.executable, '-m', 'mkin4py', 'solve', '-',
+                             '--max-iterations', '1', '--max-restarts', '0'],
+        input=json.dumps(example()), capture_output=True, text=True)
+    assert result.returncode == 1, result.stderr
+    data = json.loads(result.stdout)
+    assert not data['success'] and data['status'] == 'iteration_limit'

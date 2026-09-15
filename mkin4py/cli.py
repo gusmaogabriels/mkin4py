@@ -1,6 +1,7 @@
 """Local JSON interface to the original microkinetic model and solver."""
 import argparse
 import json
+import math
 from pathlib import Path
 import sys
 
@@ -46,6 +47,18 @@ def load_model(document):
     return model
 
 
+def _json_value(value):
+    if hasattr(value, 'tolist'):
+        return _json_value(value.tolist())
+    if isinstance(value, dict):
+        return {k: _json_value(v) for k, v in value.items()}
+    if isinstance(value, list):
+        return [_json_value(v) for v in value]
+    if isinstance(value, float) and not math.isfinite(value):
+        return None
+    return value
+
+
 def main(argv=None):
     from . import __version__
     parser = argparse.ArgumentParser(description="Solve local microkinetic catalytic systems with JAX.")
@@ -81,7 +94,7 @@ def main(argv=None):
             model = load_model(json.loads(source))
             result = rk4(args.param, model=model, linear_solver=args.linear_solver,
                          convtol=args.max_iterations, max_restarts=args.max_restarts, max_time=args.max_time)
-            result = {k: v.tolist() if hasattr(v, 'tolist') else v for k, v in result.items()}
+            result = _json_value(result)
         print(json.dumps(result, allow_nan=False, indent=2))
         return 0 if result.get('success', True) else 1
     except (OSError, ValueError, TypeError, KeyError) as exc:

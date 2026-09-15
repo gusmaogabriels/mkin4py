@@ -6,12 +6,13 @@ import mkin4py
 
 
 @pytest.mark.parametrize('method', ['dense', 'qmr'])
-def test_original_readme_example(method):
+@pytest.mark.parametrize('param', [1, 2])
+def test_original_readme_example(method, param):
     readme = (Path(__file__).parents[1] / 'README.md').read_text()
     code = textwrap.dedent(readme[readme.index('        import mkin4py'):readme.index('  - **Evaluation**:')])
     exec(compile(code, 'README.md', 'exec'), {})
     mkin4py.mkmodel.reset_model(seed=0)
-    result = mkin4py.solver.solve.rk4(linear_solver=method, max_restarts=3)
+    result = mkin4py.solver.solve.rk4(param, linear_solver=method, max_restarts=3)
     assert result['success'], result
     expected = [.439342950,.00119743307,.107992516,.110447591,2.99730332e-9,
                 7.70711567e-10,.100256049,.0978269843,.132727193,.00964368428,

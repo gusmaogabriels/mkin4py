@@ -13,7 +13,7 @@ mkin4py solve model.json --linear-solver dense --json
 
 The CLI runs on the user's machine. It reads JSON and never imports user-supplied
 Python, sends telemetry, or submits a job to a server. Exit codes: 0 converged,
-1 no convergence, 2 invalid input. All numeric model fields and units match the
+1 no convergence, 2 invalid input. Nonfinite numbers in a failed result are serialized as `null`. All numeric model fields and units match the
 original Python setup API. `pre_exponential` and `activation_energies` are flat
 reaction vectors; `stoichiometry` is species by reactions, `gas_species` lists
 fixed-pressure species indices, and `concentrations` follows that same order.

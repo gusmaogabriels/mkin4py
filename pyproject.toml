@@ -8,7 +8,7 @@ version = "2.0.0a1"
 description = "Microkinetic catalytic systems with JAX"
 readme = "README.md"
 requires-python = ">=3.11"
-license = "MIT"
+license = "MIT AND BSD-3-Clause"
 license-files = ["LICENSE.md", "NOTICE.md"]
 authors = [{name = "Gabriel S. Gusmao", email = "gusmaogabriels@gmail.com"}]
 dependencies = ["jax>=0.4.38"]

@@ -76,7 +76,9 @@ A general package for linearly defining and solving microkinetic catalytic syste
   - **Example**: Stoltze's 17-Step Ethylene Epoxidation MK system
 
         import mkin4py
-        import numpy as np
+        import jax
+        import jax.numpy as np
+        jax.config.update('jax_enable_x64', True)
         
         # Environment Conditions
         T = 500; #K
@@ -114,8 +116,8 @@ A general package for linearly defining and solving microkinetic catalytic syste
         
         nreac = [0, 1] # Reactant Rows in mS
         nprod = [2, 3, 4, 5] # Product Rows in mS
-        stoichs = np.concatenate((nreac,nprod)) # Reactants and Products are not under PSSA
-        mkin4py.mkmodel.create(np.shape(ms)[0],np.shape(ms)[1],stoichs) # Initialize the model
+        stoichs = np.array(nreac + nprod) # Reactants and Products are not under PSSA
+        mkin4py.mkmodel.create(len(ms),len(ms[0]),stoichs) # Initialize the model
         mkin4py.mkmodel.set_ms(ms) # Set the stoichiometry matrix
         
         # Species labels 

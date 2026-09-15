@@ -82,8 +82,7 @@ def rk4(param=1, *, model=None, **options):
         if bool(np.isfinite(residual)) and float(residual) <= p['criteria']:
             status = 'converged'
             break
-        if not bool(np.isfinite(residual)):
-            status = 'numerical_failure'
+        status = 'numerical_failure' if not bool(np.isfinite(residual)) else 'iteration_limit'
         if perf_counter()-t0 >= p['max_time']:
             status = 'time_limit'
             break
