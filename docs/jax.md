@@ -63,13 +63,83 @@ rates = jax.jit(lambda coverage, ms, k: ms @ (k[:, None] * power_law(coverage, m
 original analytic derivatives after eliminating one surface species. The solver's
 compiled `attempt` takes all arrays explicitly; changing parameter values does
 not reuse stale globals. Its dynamic convergence loop supports forward-mode
-transforms, but reverse-mode differentiation through the iterative solve is not
-provided. Different array shapes/dtypes or solver methods can require compilation.
+transforms. The source checkout also provides `steady_state` for forward- and
+reverse-mode sensitivities of converged solutions. Different array shapes/dtypes
+or solver methods can require compilation.
+
+## Steady-state gradients
+
+`steady_state` uses the original Newton/RK4 numerical attempt, with
+[implicit differentiation](https://docs.jax.dev/en/latest/_autosummary/jax.lax.custom_root.html)
+of the reduced surface balance. It returns a one-dimensional coverage vector and
+supports `jit`, `grad`, `jacfwd`, `jacrev`, `hessian` and `vmap`. Model configuration
+stays outside the transformed function; pass changing physical parameters as arrays:
+
+```python
+import jax
+import jax.numpy as jnp
+from mkin4py.cli import example, load_model
+from mkin4py.solver.solve import steady_state
+
+jax.config.update('jax_enable_x64', True)
+model = load_model(example())
+maps = model.maps
+
+def adsorbed_fraction(k):
+    coverage = steady_state(model.coverage, model.ms, k, maps['surface'],
+                            maps['xsurface'], maps['ndof'], criteria=1e-12)
+    return coverage[2]
+
+value, gradient = jax.jit(jax.value_and_grad(adsorbed_fraction))(jnp.array([2., 1.]))
+# value = 2/3; gradient = [1/9, -2/9]
+```
+
+Rate constants and fixed gas entries in the initial coverage can be differentiated;
+the initial surface guess is not a physical parameter. Hold integer stoichiometry
+and index maps fixed. Chain the rate constants through the Arrhenius expression
+to differentiate temperature, activation energies or pre-exponential factors.
+The callable can be composed into a local Optinpy objective.
+
+Sensitivities require an isolated converged root with a nonsingular reduced
+Jacobian. This interface normalizes each residual row by its largest kinetic
+coefficient before applying `criteria`; uniformly slow rates cannot make an
+incorrect initial coverage pass the root check. The original `rk4` retains its
+absolute physical-rate criterion. Invalid dynamic solver controls return NaN.
+Sensitivities describe the selected steady-state branch; they do not differentiate
+restart decisions or jumps between multiple steady states. Unconverged outputs and
+their sensitivities are NaN; a singular root can have finite coverage but invalid
+sensitivities. Check finiteness before using a result. The pure function has no
+random restarts or Python wall-time limit. The original `rk4` driver and its result
+dictionary remain available for restart/status handling.
+
+## Local usage counts
+
+Usage accounting is opt-in and local. Choose a database path to enable it:
+
+```sh
+export MKIN4PY_USAGE_DB="$HOME/mkin4py-usage.sqlite3"
+mkin4py methods --json
+mkin4py usage --json
+```
+
+PowerShell: `$env:MKIN4PY_USAGE_DB = "$HOME/mkin4py-usage.sqlite3"`.
+The JSON report contains daily counts by package version, command and exit code,
+plus command duration excluding interpreter startup and package imports. It stores
+no command arguments, model contents, file paths or user/device identifiers and sends nothing
+over the network. `usage` does not count itself. Unset the environment variable to
+stop recording; remove your database file to clear counts. Storage errors leave
+the command's result and exit code intact. These local counts are separate from
+public downloads and MCP request attempts; they are not automatically uploaded
+to a dashboard. `steady_state` and `usage` are source additions after the existing
+2.0.0a1 GitHub artifacts; use the source installation at the top of this page.
+
+## Verification and timing
 
 ```sh
 python -m pip install '.[dev]'
 python -m pytest -q
 python -m benchmarks.timing --repeats 20
+python -m benchmarks.sensitivities --repeats 20
 ```
 
 The benchmark reports lowering, compilation, first execution and repeated warm

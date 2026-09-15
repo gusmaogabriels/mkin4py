@@ -59,11 +59,12 @@ def _json_value(value):
     return value
 
 
-def main(argv=None):
+def _main(argv=None):
     from . import __version__
     parser = argparse.ArgumentParser(description="Solve local microkinetic catalytic systems with JAX.")
     parser.add_argument('--version', action='version', version=__version__)
     sub = parser.add_subparsers(dest='command', required=True)
+    sub.add_parser('usage', help='Show opt-in local CLI counts').add_argument('--json', action='store_true')
     for name in ('methods', 'example'):
         sub.add_parser(name).add_argument('--json', action='store_true')
     solve = sub.add_parser('solve', help='Read a JSON model file (or - for stdin) and solve its steady state')
@@ -100,6 +101,12 @@ def main(argv=None):
     except (OSError, ValueError, TypeError, KeyError) as exc:
         print(json.dumps({'success': False, 'error': str(exc)}), file=sys.stderr)
         return 2
+
+
+def main(argv=None):
+    from . import __version__
+    from ._usage import run
+    return run(_main, argv, package='mkin4py', version=__version__, commands={'methods', 'example', 'solve'})
 
 
 if __name__ == '__main__':
