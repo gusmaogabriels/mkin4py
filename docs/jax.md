@@ -3,6 +3,8 @@
 Install this checkout with Python 3.11 or later: `python -m pip install .`.
 JAX 0.4.38 or later supplies the numerical runtime. SciPy is used only as a
 reference in development tests (JAX may itself install SciPy transitively).
+For the packaged JAX alpha, use the [README installation instructions](../README.md#instructions).
+PyPI currently provides the legacy 1.0 release.
 
 ```sh
 mkin4py methods --json
@@ -43,9 +45,9 @@ import mkin4py
 ```
 
 The CLI enables it by default; `--float32` opts into reduced precision. Importing
-the library does not change JAX global precision. The historical README setup
-and evaluation code is executed by CI, with 64-bit mode enabled, and checked
-against its published coverages and rates.
+the library does not change JAX global precision. CI executes the historical
+README setup with 64-bit mode enabled, then checks both linear solvers and both
+Newton correction variants against its published coverages and rates.
 
 The configuration API is Python. Use the explicit array kernels for composition:
 

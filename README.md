@@ -12,8 +12,8 @@ Copyright © 2015 - Gabriel Sabença Gusmão
 
 [![researchgate](https://www.researchgate.net/images/public/profile_share_badge.png)](https://www.researchgate.net/profile/Gabriel_Gusmao?cp=shp)
 
-[![license](https://img.shields.io/pypi/l/mkin4py.svg)](./LICENSE.md)
-[![pypi version](https://img.shields.io/pypi/v/mkin4py.svg)](https://pypi.python.org/pypi/mkin4py)
+[![license](https://img.shields.io/badge/license-MIT%20AND%20BSD--3--Clause-blue)](./NOTICE.md)
+[![PyPI legacy version](https://img.shields.io/pypi/v/mkin4py.svg?label=PyPI%20%28legacy%29)](https://pypi.org/project/mkin4py/)
 
 A general package for linearly defining and solving microkinetic catalytic systems.
 
@@ -43,11 +43,12 @@ A general package for linearly defining and solving microkinetic catalytic syste
      - Set the kinetic parameters: Activation Energies and Pre-exponential factors (must be of the size of the involved elementary reactions)
      - Set the fixed concentration of *free*-species (molar fraction in non-adsorbed phase)
      - Parse the string-labels of involved species (array of size of number of species) 
-  3. Solve the decurrent ensuing LP (linear problem)
-     - For now, there is only available a *Newton*-type method.
-     - Standard iterative-procedure adopted for solving the inner-loop LP (Quasi-minimum residue)
+  3. Solve the nonlinear steady-state system using successive linearized corrections.
+     - The original *Newton*-type method integrates its correction flow with RK4; it does not integrate physical time.
+     - The inner linear system uses QMR (quasi-minimal residual) by default, with a dense fallback. A direct dense solver is also selectable.
 
-  The convergence parameters are set as default in the module `solver` in `.params`
+  Defaults are in `mkin4py.solver.params.convergence_params`. Override them per
+  call, for example `mkin4py.solver.solve.rk4(linear_solver='dense', criteria=1e-8)`.
 
 ----------------
 **Features**
@@ -58,13 +59,20 @@ A general package for linearly defining and solving microkinetic catalytic syste
   The project makes use of explicit routines for the calculation of the MK model derivatives
   
     - *Jacobian*: Available as standard.
-    - *Hessian*: Used in the convex two-step method (details in the aforementioned reference)
+    - *Hessian*: Used in the convex two-step method (`rk4(param=2)`; details in the aforementioned reference)
+
+   **JAX execution**
+
+  Model arrays and returned coverages/rates are JAX arrays. Numerical solver
+  attempts are JIT-compiled; model configuration and the restart driver run in
+  Python. The original analytic derivatives remain available, and explicit array
+  kernels support JAX transformations; see [JAX compatibility](docs/jax.md).
 
 ----------------
 **On the way**
 ----------------
 
-  1. Additional LP solvers in "switchable" fashion.
+  1. Additional linear-system solvers beyond the selectable QMR and dense methods.
   2. Evolutionary methods for the definition of best convergence parameters for *stiff* problems (when TOF`s are close to the machine precision)
 
 ----------------
@@ -75,7 +83,27 @@ A general package for linearly defining and solving microkinetic catalytic syste
 
   - **Installation**
 
-        pip install --upgrade https://github.com/gusmaogabriels/mkin4py/zipball/master
+    Requires Python 3.11 or later and JAX 0.4.38 or later. Pip installs JAX as a
+    dependency. Install the [JAX alpha release, 2.0.0a1](https://github.com/gusmaogabriels/mkin4py/releases/tag/v2.0.0a1):
+
+        python -m pip install https://github.com/gusmaogabriels/mkin4py/releases/download/v2.0.0a1/mkin4py-2.0.0a1-py3-none-any.whl
+
+    Or install the current source using the original installation route:
+
+        python -m pip install --upgrade https://github.com/gusmaogabriels/mkin4py/zipball/master
+
+    PyPI currently provides the legacy 1.0 release; `pip install mkin4py` does
+    not yet install this JAX version.
+
+  - **Local CLI**
+
+        mkin4py methods --json
+        mkin4py example --json > model.json
+        mkin4py solve model.json --json
+        mkin4py solve model.json --linear-solver dense --json
+
+    The CLI reads and solves the model locally and enables 64-bit precision by
+    default. The Python example below enables it explicitly for stiff kinetics.
 
   - **Example**: Stoltze's 17-Step Ethylene Epoxidation MK system
 
@@ -92,7 +120,7 @@ A general package for linearly defining and solving microkinetic catalytic syste
         # Set the environment conditions
         mkin4py.environment.set_temperature(T)
         mkin4py.environment.set_gas_constant(gas_constant)
-        mkin4py.environment. set_pressure(P)
+        mkin4py.environment.set_pressure(P)
         
         # Stoichiometric Matrix
         ms = [
@@ -152,8 +180,8 @@ A general package for linearly defining and solving microkinetic catalytic syste
         
   - **Evaluation**:
        
-        sol = mkin4py.solver.solve.rk4() # 4th-order Runge-Kutta method coupled within the LP solved via QMR
-        # Outupts
+        sol = mkin4py.solver.solve.rk4() # RK4 Newton correction flow; QMR inner linear solve
+        # Outputs
         print ('...')
         print (sol['msg'], 'time: ', sol['time'])
         print ('Coverage')
@@ -162,6 +190,13 @@ A general package for linearly defining and solving microkinetic catalytic syste
         print (sol['rates'])
 
   - **Output**:
+
+    The original output below is retained as a numerical reference. Elapsed time
+    depends on the machine and includes any JAX compilation incurred by the call;
+    the historical time shown here is not a JAX benchmark. Convergence requires
+    the maximum absolute surface-species rate to be at most `criteria` (default
+    `1e-8`); tiny residuals may differ from the reference. Check `sol['success']`
+    and `sol['status']` when handling results programmatically.
 
         ...
         Convergence achieved time:  2.25999999046
