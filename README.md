@@ -1,8 +1,11 @@
 **mkin4py** 
 ==================================================================
 
+[![CI](https://img.shields.io/github/actions/workflow/status/gusmaogabriels/mkin4py/ci.yml?branch=master&event=push&label=CI)](https://github.com/gusmaogabriels/mkin4py/actions/workflows/ci.yml)
+[![GitHub release](https://img.shields.io/github/v/release/gusmaogabriels/mkin4py?include_prereleases&sort=date&label=GitHub&color=blue)](https://github.com/gusmaogabriels/mkin4py/releases)
+[![License](https://img.shields.io/badge/license-MIT%20AND%20BSD--3--Clause-blue)](./NOTICE.md)
 [![GitHub downloads](https://img.shields.io/endpoint?url=https%3A%2F%2Fraw.githubusercontent.com%2Fgusmaogabriels%2Foptinpy%2Fdistribution-statistics%2Fpackages%2Fbadges%2Fmkin4py-github.json)](https://github.com/gusmaogabriels/mkin4py/releases)
-[![PyPI downloads](https://img.shields.io/endpoint?url=https%3A%2F%2Fraw.githubusercontent.com%2Fgusmaogabriels%2Foptinpy%2Fdistribution-statistics%2Fpackages%2Fbadges%2Fmkin4py-pypi.json)](https://pypistats.org/packages/mkin4py)
+[![PyPI downloads](https://img.shields.io/endpoint?url=https%3A%2F%2Fraw.githubusercontent.com%2Fgusmaogabriels%2Foptinpy%2Fdistribution-statistics%2Fpackages%2Fbadges%2Fmkin4py-pypi.json)](https://pypistats.org/packages/mkin4py "Monthly total shown only when complete and current; otherwise unavailable. View the public source.")
 
 *mkin(microkinetics) 4 py(thon)*
 
@@ -11,9 +14,6 @@ Copyright © 2015 - Gabriel Sabença Gusmão
 [![linkedin](https://static.licdn.com/scds/common/u/img/webpromo/btn_viewmy_160x25.png)](https://br.linkedin.com/pub/gabriel-saben%C3%A7a-gusm%C3%A3o/115/aa6/aa8)
 
 [![researchgate](https://www.researchgate.net/images/public/profile_share_badge.png)](https://www.researchgate.net/profile/Gabriel_Gusmao?cp=shp)
-
-[![license](https://img.shields.io/badge/license-MIT%20AND%20BSD--3--Clause-blue)](./NOTICE.md)
-[![PyPI legacy version](https://img.shields.io/pypi/v/mkin4py.svg?label=PyPI%20%28legacy%29)](https://pypi.org/project/mkin4py/)
 
 A general package for linearly defining and solving microkinetic catalytic systems.
 
