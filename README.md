@@ -2,6 +2,7 @@
 ==================================================================
 
 [![CI](https://img.shields.io/github/actions/workflow/status/gusmaogabriels/mkin4py/ci.yml?branch=master&event=push&label=CI)](https://github.com/gusmaogabriels/mkin4py/actions/workflows/ci.yml)
+[![PyPI version](https://img.shields.io/pypi/v/mkin4py.svg)](https://pypi.org/project/mkin4py/)
 [![GitHub release](https://img.shields.io/github/v/release/gusmaogabriels/mkin4py?include_prereleases&sort=date&label=GitHub&color=blue)](https://github.com/gusmaogabriels/mkin4py/releases)
 [![License](https://img.shields.io/badge/license-MIT%20AND%20BSD--3--Clause-blue)](./NOTICE.md)
 [![GitHub downloads](https://img.shields.io/endpoint?url=https%3A%2F%2Fraw.githubusercontent.com%2Fgusmaogabriels%2Foptinpy%2Fdistribution-statistics%2Fpackages%2Fbadges%2Fmkin4py-github.json)](https://github.com/gusmaogabriels/mkin4py/releases)
@@ -84,16 +85,16 @@ A general package for linearly defining and solving microkinetic catalytic syste
   - **Installation**
 
     Requires Python 3.11 or later and JAX 0.4.38 or later. Pip installs JAX as a
-    dependency. Install the [JAX alpha release, 2.0.0a1](https://github.com/gusmaogabriels/mkin4py/releases/tag/v2.0.0a1):
+    dependency. Install or upgrade to the JAX release from [PyPI](https://pypi.org/project/mkin4py/):
 
-        python -m pip install https://github.com/gusmaogabriels/mkin4py/releases/download/v2.0.0a1/mkin4py-2.0.0a1-py3-none-any.whl
+        python -m pip install --upgrade mkin4py
 
     Or install the current source using the original installation route:
 
         python -m pip install --upgrade https://github.com/gusmaogabriels/mkin4py/zipball/master
 
-    PyPI currently provides the legacy 1.0 release; `pip install mkin4py` does
-    not yet install this JAX version.
+    Version 2.0.0 includes JAX execution, steady-state sensitivities and the local
+    CLI. Version 1.0 remains available for legacy environments.
 
   - **Local CLI**
 

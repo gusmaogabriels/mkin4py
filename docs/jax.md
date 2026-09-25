@@ -1,10 +1,11 @@
 # JAX execution and local CLI
 
-Install this checkout with Python 3.11 or later: `python -m pip install .`.
+Install with Python 3.11 or later: `python -m pip install --upgrade mkin4py`.
+To install a source checkout instead, run `python -m pip install .`.
 JAX 0.4.38 or later supplies the numerical runtime. SciPy is used only as a
 reference in development tests (JAX may itself install SciPy transitively).
-For the packaged JAX alpha, use the [README installation instructions](../README.md#instructions).
-PyPI currently provides the legacy 1.0 release.
+Version 2.0.0 on PyPI includes the JAX solver, steady-state sensitivities and local
+CLI. See the [README installation instructions](../README.md#instructions).
 
 ```sh
 mkin4py methods --json
@@ -63,7 +64,7 @@ rates = jax.jit(lambda coverage, ms, k: ms @ (k[:, None] * power_law(coverage, m
 original analytic derivatives after eliminating one surface species. The solver's
 compiled `attempt` takes all arrays explicitly; changing parameter values does
 not reuse stale globals. Its dynamic convergence loop supports forward-mode
-transforms. The source checkout also provides `steady_state` for forward- and
+transforms. Version 2.0.0 also provides `steady_state` for forward- and
 reverse-mode sensitivities of converged solutions. Different array shapes/dtypes
 or solver methods can require compilation.
 
@@ -130,8 +131,8 @@ over the network. `usage` does not count itself. Unset the environment variable 
 stop recording; remove your database file to clear counts. Storage errors leave
 the command's result and exit code intact. These local counts are separate from
 public downloads and MCP request attempts; they are not automatically uploaded
-to a dashboard. `steady_state` and `usage` are source additions after the existing
-2.0.0a1 GitHub artifacts; use the source installation at the top of this page.
+to a dashboard. `steady_state` and `usage` are included in version 2.0.0; the older
+2.0.0a1 GitHub artifacts do not include these features.
 
 ## Verification and timing
 

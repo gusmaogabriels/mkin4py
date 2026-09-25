@@ -2,7 +2,7 @@
 from __future__ import division, absolute_import, print_function
 
 __author__ = {'Gabriel S. Gusmao' : 'gusmaogabriels@gmail.com'}
-__version__ = '2.0.0a1'
+__version__ = '2.0.0'
 
 """
 
